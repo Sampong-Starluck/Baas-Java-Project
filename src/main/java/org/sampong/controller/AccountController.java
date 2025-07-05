@@ -11,19 +11,19 @@ public class AccountController {
 
     public AccountController() {}
 
-    public static Account getAccount(Long id) {
+    public Account getAccountById(Long id) {
         return accountService.getById(id);
     }
 
-    public static Account getByAccountNumber(String name) {
+    public Account getByAccountNumber(String name) {
         return accountService.getByName(name);
     }
 
-    public static Account addNewAccount(Account account) {
+    public Account addNewAccount(Account account) {
         return accountService.addNew(account);
     }
 
-    public static Account updateAccount(Account account) {
+    public Account updateAccount(Account account) {
         return accountService.updateObject(account);
     }
 

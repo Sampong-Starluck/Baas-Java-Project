@@ -1,10 +1,12 @@
 package org.sampong.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import org.sampong.base.BaseEntity;
 
 @Entity
 @Table(name = "mas_user")
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

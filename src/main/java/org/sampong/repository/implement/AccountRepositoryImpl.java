@@ -1,6 +1,7 @@
 package org.sampong.repository.implement;
 
 import jakarta.persistence.NoResultException;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.sampong.models.Account;
@@ -39,7 +40,8 @@ public class AccountRepositoryImpl implements AccountRepository {
         try (Session session = DatabaseConfig.getSessionFactory().openSession()) {
             var query = "select u from Account u where u.id = :id and u.status = true";
             Account account = session.createQuery(query, Account.class).setParameter("id", id).getSingleResult();
-            return Optional.ofNullable(account);
+            Hibernate.initialize(account.user());
+            return Optional.of(account);
         } catch (NoResultException e) {
             // No user found, return empty
             return Optional.empty();
@@ -86,7 +88,8 @@ public class AccountRepositoryImpl implements AccountRepository {
         try (Session session = DatabaseConfig.getSessionFactory().openSession()) {
             var account = "select u from Account u where u.status = true";
             List<Account> accountList = session.createQuery(account, Account.class).getResultList();
-            return Optional.ofNullable(accountList).orElse(List.of());
+            accountList.stream().sorted().forEach(it -> Hibernate.initialize(it.user()));
+            return Optional.of(accountList).orElse(List.of());
         }catch( Exception e ) {
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to query all users");

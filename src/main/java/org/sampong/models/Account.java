@@ -1,13 +1,14 @@
 package org.sampong.models;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import jakarta.persistence.*;
 import org.sampong.base.BaseEntity;
 
-import java.util.Currency;
 import java.util.Objects;
 
 @Entity
 @Table(name = "mas_account")
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -105,14 +106,13 @@ public class Account extends BaseEntity {
 
     @Override
     public String toString() {
-        return """
-            {
-                "id"              :%s,
-                "accountNumber"   :%s,
-                "accountName"     :%s,
-                "balance"         :%s,
-                "currency"        :%s,
-                "userId"          :%s,
-            }""".formatted(id, accountNumber, accountName, balance, currency, user.id());
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", accountName='" + accountName + '\'' +
+                ", balance=" + balance +
+                ", currency='" + currency + '\'' +
+                ", user=" + user +
+                '}';
     }
 }

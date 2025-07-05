@@ -54,7 +54,7 @@ public class Initializer {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (session != null && session.isOpen()) {
                 session.close();
-                System.out.println("Session closed on shutdown.");
+                System.out.println("\n\nSession closed on shutdown.");
             }
             DatabaseConfig.shutdown();
         }));
