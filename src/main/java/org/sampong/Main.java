@@ -4,6 +4,6 @@ import org.sampong.plugins.Initializer;
 
 public class Main {
     public static void main(String[] args) {
-        Initializer.startUp();
+        Initializer.runApplication();
     }
 }

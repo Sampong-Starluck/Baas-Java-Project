@@ -45,7 +45,7 @@ public class Initializer {
         System.out.println("Transfer menu selected.");
     }
 
-    public static void startUp() {
+    public static void runApplication() {
         System.out.println("Initializing...");
         // Open session at startup
         session = DatabaseConfig.getSessionFactory().openSession();
