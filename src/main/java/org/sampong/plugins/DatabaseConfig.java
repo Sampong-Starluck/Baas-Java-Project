@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.sampong.models.Account;
 import org.sampong.models.User;
 
 import java.util.Properties;
@@ -33,6 +34,7 @@ public class DatabaseConfig {
 
             // Add annotated classes
             configuration.addAnnotatedClass(User.class);
+            configuration.addAnnotatedClass(Account.class);
 
             // Build ServiceRegistry
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()

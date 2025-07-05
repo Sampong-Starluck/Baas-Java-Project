@@ -1,14 +1,14 @@
 package org.sampong.models;
 
 import jakarta.persistence.*;
+import org.sampong.base.BaseEntity;
 
 @Entity
 @Table(name = "mas_user")
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Boolean status;
     private String username;
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -22,7 +22,6 @@ public class User {
         this.address = address;
         this.email = email;
         this.id = id;
-        this.status = status;
         this.username = username;
         this.phoneNumber = phoneNumber;
     }
@@ -33,15 +32,6 @@ public class User {
 
     public User setId(Long id) {
         this.id = id;
-        return this;
-    }
-
-    public Boolean status() {
-        return status;
-    }
-
-    public User setStatus(Boolean status) {
-        this.status = status;
         return this;
     }
 
@@ -83,13 +73,13 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", status=" + status +
-                ", username='" + username + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return """ 
+            {
+                "id"          : %s
+                "username"    : %s
+                "phone"       : %s
+                "email"       : %s
+                "address"     : %s
+            }""".formatted(id, username, phoneNumber, email, address);
     }
 }

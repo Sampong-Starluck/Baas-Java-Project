@@ -1,30 +1,33 @@
 package org.sampong.services.implement;
 
-import org.sampong.models.User;
-import org.sampong.repository.UserRepository;
-import org.sampong.repository.implement.UserRepositoryImpl;
-import org.sampong.services.UserService;
+import org.sampong.models.Account;
+import org.sampong.repository.AccountRepository;
+import org.sampong.repository.implement.AccountRepositoryImpl;
+import org.sampong.services.AccountService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class UserServiceImpl implements UserService {
-    private final UserRepository repository = new UserRepositoryImpl();
+public class AccountServiceImpl implements AccountService {
+    private static final AccountRepository repository = new AccountRepositoryImpl();
 
-    public UserServiceImpl(){}
+    public AccountServiceImpl() {
+    }
 
     @Override
-    public User getById(Long id) {
+    public Account getById(Long id) {
         try {
             return repository.findById(id).orElse(null);
         } catch (Exception e) {
-            System.err.println("Error fetching user by ID: " + e.getMessage());
+            System.err.println("Error fetching account by ID: " + e.getMessage());
             return null;
         }
     }
 
     @Override
-    public User getByName(String username) {
+    public Account getByName(String username) {
         try {
             return repository.findByName(username).orElse(null);
         } catch (Exception e) {
@@ -34,12 +37,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addNew(User t) {
+    public Account addNew(Account t) {
         if (t.id() != null) {
             System.err.println("User with id " + t.id() + " already exists");
             return null;
         }
         try {
+            t.setAccountNumber(generateAccountNumber());
             return repository.save(t);
         } catch (Exception e) {
             System.err.println("Error in addNew: " + e.getMessage());
@@ -48,22 +52,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateObject(User t) {
+    public Account updateObject(Account t) {
         if (t.id() == null || t.id() == 0L) {
             System.err.println("User with id " + t.id() + " not found");
             return null;
         }
         try {
-            var oldUser = getById(t.id());
-            if (oldUser == null || oldUser.id() == null) {
+            var oldAccount = getById(t.id());
+            if (oldAccount == null || oldAccount.id() == null) {
                 System.err.println("User with id " + t.id() + " not found in DB");
                 return null;
             }
-            oldUser.setUsername(t.username());
-            oldUser.setEmail(t.email());
-            oldUser.setAddress(t.address());
-            oldUser.setPhoneNumber(t.phoneNumber());
-            return repository.update(oldUser);
+            oldAccount.setAccountName(t.accountName());
+            oldAccount.setBalance(t.balance());
+            oldAccount.setCurrency(t.currency());
+            return repository.update(t);
         } catch (Exception e) {
             System.err.println("Error in updateObject: " + e.getMessage());
             return null;
@@ -71,15 +74,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User delete(Long id) {
+    public Account delete(Long id) {
         try {
-            var deletedUser = getById(id);
-            if (deletedUser == null || deletedUser.id() == null) {
+            var deleteAccount = getById(id);
+            if (deleteAccount == null || deleteAccount.id() == null) {
                 System.err.println("User with id " + id + " not found");
                 return null;
             }
-            deletedUser.setStatus(false);
-            return repository.update(deletedUser);
+            deleteAccount.setStatus(false);
+            return repository.update(deleteAccount);
         } catch (Exception e) {
             System.err.println("Error in delete: " + e.getMessage());
             return null;
@@ -87,29 +90,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return  repository.findAll();
+    public List<Account> getAll() {
+        return repository.findAll();
     }
 
     @Override
-    public String tableList(List<User> t) {
+    public String tableList(List<Account> t) {
         String[] headers = {
-                "ID", "Status", "Username", "Phone Number", "Email", "Address"
+                "ID", "Status", "Account Number", "Account Name", "Balance", "Currency", "User ID"
         };
 
-        // Prepare data rows
         List<String[]> rows = new ArrayList<>();
-        for (User user : t) {
+        for (Account account : t) {
             rows.add(new String[]{
-                    user.id() == null ? "" : user.id().toString(),
-                    user.status() == null ? "" : user.status().toString(),
-                    user.username() == null ? "" : user.username(),
-                    user.phoneNumber() == null ? "" : user.phoneNumber(),
-                    user.email() == null ? "" : user.email(),
-                    user.address() == null ? "" : user.address()
+                    account.id() == null ? "" : account.id().toString(),
+                    account.status() == null ? "" : account.status().toString(),
+                    account.accountNumber() == null ? "" : account.accountNumber(),
+                    account.accountName() == null ? "" : account.accountName(),
+                    account.balance() == null ? "" : account.balance().toString(),
+                    account.currency() == null ? "" : account.currency(),
+                    account.user() == null ? "" : account.user().id().toString(),
             });
         }
-
         // Calculate max width for each column
         int[] colWidths = new int[headers.length];
         for (int i = 0; i < headers.length; i++) {
@@ -120,7 +122,6 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
-
         // Build separator
         StringBuilder sep = new StringBuilder("+");
         for (int w : colWidths) {
@@ -145,5 +146,13 @@ public class UserServiceImpl implements UserService {
         sb.append("\n").append(separator);
 
         return sb.toString();
+    }
+
+    private String generateAccountNumber() {
+        System.out.println("Generating account number");
+        var date = new Date();
+        var timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+        var timeStampMIli = date.getTime();
+        return "0"+timeStamp+timeStampMIli;
     }
 }

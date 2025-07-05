@@ -23,8 +23,12 @@ public class UserRepositoryImpl implements UserRepository {
             transaction.commit();
             return user;
         }  catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+            if (transaction != null && transaction.getStatus().canRollback()) {
+                try {
+                    transaction.rollback();
+                } catch (Exception rollbackEx) {
+                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
+                }
             }
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to save user", e);
@@ -47,11 +51,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
+    public Optional<User> findByName(String username) {
         try (Session session = DatabaseConfig.getSessionFactory().openSession()) {
             var query = "select u from User u where u.username = :id and status = true";
             User user = session.createQuery(query, User.class).setParameter("id", username).getSingleResult();
             return Optional.ofNullable(user);
+        }catch (NoResultException e) {
+            // No user found, return empty
+            return Optional.empty();
         } catch( Exception e ) {
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to query user", e);
@@ -65,7 +72,6 @@ public class UserRepositoryImpl implements UserRepository {
             transaction = session.beginTransaction();
             session.merge(user);
             transaction.commit();
-            System.out.println("User updated successfully: " + user);
             return user;
         }  catch( Exception e ) {
             if (transaction != null) {
