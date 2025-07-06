@@ -20,8 +20,8 @@ public class DatabaseConfig {
     private static final SessionFactory sessionFactory;
 
     private static final String jdbcUrl = "jdbc:postgresql://localhost:5432/baas_project";
-    private static final String username = "postgres";
-    private static final String password = "S@mpong_3788";
+    private static final String username = "";
+    private static final String password = "";
     private static final String driver = "org.postgresql.Driver";
 
     static {
