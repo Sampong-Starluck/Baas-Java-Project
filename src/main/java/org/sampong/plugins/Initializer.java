@@ -45,11 +45,6 @@ public class Initializer {
         return true; // Continue looping
     }
 
-    private static void handleTransfer() {
-        // Implement transfer-related logic here
-        log.info("Start ====>> Transfer menu selected.");
-    }
-
     public static void runApplication() {
 //        System.out.println("Initializing...");
         log.info("Start ====>> Initialize the application.");
