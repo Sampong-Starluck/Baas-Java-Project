@@ -8,7 +8,6 @@ import org.sampong.repository.TransactionRecordRepository;
 import org.sampong.repository.implement.AccountRepositoryImpl;
 import org.sampong.repository.implement.TransactionRecordRepositoryImpl;
 import org.sampong.services.TransactionRecordService;
-import org.sampong.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,20 +22,16 @@ import java.util.concurrent.TimeUnit;
 
 public class TransactionRecordServiceImpl implements TransactionRecordService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountRepositoryImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TransactionRecordServiceImpl.class);
 
     private final TransactionRecordRepository trxRecRepository = new TransactionRecordRepositoryImpl();
     private final ConcurrentLinkedQueue<TrxRequest> transferQueue = new ConcurrentLinkedQueue<>();
     //    List<TransactionRecord> trxRecList = new CopyOnWriteArrayList<>();
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private AccountRepository accountRepository = new AccountRepositoryImpl();
+    private final AccountRepository accountRepository = new AccountRepositoryImpl();
 
     public TransactionRecordServiceImpl() {
         scheduler.scheduleAtFixedRate(this::processQueue, 0, 2, TimeUnit.SECONDS);
-    }
-
-    public TransactionRecordServiceImpl(AccountRepository accountRepository, UserService userService) {
-        this.accountRepository = accountRepository;
     }
 
     @Override
