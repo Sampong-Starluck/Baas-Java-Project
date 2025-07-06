@@ -76,12 +76,12 @@ public class User extends BaseEntity {
     @Override
     public String toString() {
         return """ 
-            {
-                "id"          : %s
-                "username"    : %s
-                "phone"       : %s
-                "email"       : %s
-                "address"     : %s
-            }""".formatted(id, username, phoneNumber, email, address);
+                {
+                    "id"          : %s
+                    "username"    : %s
+                    "phone"       : %s
+                    "email"       : %s
+                    "address"     : %s
+                }""".formatted(id, username, phoneNumber, email, address);
     }
 }

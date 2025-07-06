@@ -7,10 +7,15 @@ import org.sampong.dto.UserResponse;
 import org.sampong.models.User;
 import org.sampong.services.UserService;
 import org.sampong.services.implement.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
 public class UserView {
+
+    private static final Logger log = LoggerFactory.getLogger(UserView.class);
+
     private static final UserController userController = new UserController();
     private static final UserService userService = new UserServiceImpl();
     private static final Scanner scanner = new Scanner(System.in);
@@ -19,6 +24,7 @@ public class UserView {
     }
 
     public void handleUser() {
+        log.info("Start ====>> handle user view.");
         var running = true;
         System.out.println("\n\n");
         while (running) {
@@ -154,6 +160,7 @@ public class UserView {
     public UserResponse toResponse(User user) {
         return new UserResponse(user.id(), user.username(), user.phoneNumber(), user.email(), user.address());
     }
+
 
     /*public String toJson(List<User> users) {
         var mapper = new ObjectMapper();

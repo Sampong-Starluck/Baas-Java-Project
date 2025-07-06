@@ -17,7 +17,8 @@ public class BaseEntity {
     @Version // Optimistic lock
     private Integer version = 0;
 
-    public BaseEntity() {}
+    public BaseEntity() {
+    }
 
     public BaseEntity(Boolean status, Integer version, Date updated, Date created) {
         this.status = status;

@@ -153,6 +153,11 @@ public class AccountServiceImpl implements AccountService {
         var date = new Date();
         var timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(date);
         var timeStampMIli = date.getTime();
-        return "0"+timeStamp+timeStampMIli;
+        return "0" + timeStamp + timeStampMIli;
+    }
+
+    @Override
+    public List<Account> getAccountByUserId(Long userId) {
+        return repository.getAccountsByUserId(userId);
     }
 }

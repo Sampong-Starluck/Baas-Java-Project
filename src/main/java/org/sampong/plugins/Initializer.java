@@ -2,15 +2,19 @@ package org.sampong.plugins;
 
 import org.hibernate.Session;
 import org.sampong.views.AccountView;
+import org.sampong.views.TransactionView;
 import org.sampong.views.UserView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
 public class Initializer {
-    private static Session session;
-
+    private static final Logger log = LoggerFactory.getLogger(Initializer.class);
     private static final UserView userView = new UserView();
-    private static AccountView accountView = new AccountView();
+    private static final AccountView accountView = new AccountView();
+    private static final TransactionView transactionView = new TransactionView();
+    private static Session session;
     private static Scanner scanner = new Scanner(System.in);
 
     public Initializer(Scanner scanner) {
@@ -30,23 +34,25 @@ public class Initializer {
         switch (choice) {
             case 1 -> userView.handleUser();
             case 2 -> accountView.handleAccount();
-            case 3 -> handleTransfer();
+            case 3 -> transactionView.handleTransactionRequest();
             case 4 -> {
+                log.info("Start ====>> Shutdown the application");
                 System.out.println("\n\n Good Bye !!! \n\n");
                 return false; // Signal to exit the loop
             }
-            default -> System.out.println("Invalid choice.");
+            default -> log.info("Start ====>> Invalid choice.");
         }
         return true; // Continue looping
     }
 
     private static void handleTransfer() {
         // Implement transfer-related logic here
-        System.out.println("Transfer menu selected.");
+        log.info("Start ====>> Transfer menu selected.");
     }
 
     public static void runApplication() {
-        System.out.println("Initializing...");
+//        System.out.println("Initializing...");
+        log.info("Start ====>> Initialize the application.");
         // Open session at startup
         session = DatabaseConfig.getSessionFactory().openSession();
 
@@ -54,7 +60,7 @@ public class Initializer {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (session != null && session.isOpen()) {
                 session.close();
-                System.out.println("\n\nSession closed on shutdown.");
+                log.info("Start ====>> Session closed on shutdown.");
             }
             DatabaseConfig.shutdown();
         }));
@@ -62,7 +68,7 @@ public class Initializer {
         // Print HikariCP pool stats
         DatabaseConfig.printConnectionPoolStats();
 
-        System.out.println("Session is open.");
+        log.info("Start ====>> Session is open.");
         System.out.println("\n\n");
         var running = true;
         while (true) {

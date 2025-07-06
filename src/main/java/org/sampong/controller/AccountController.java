@@ -9,7 +9,8 @@ import java.util.List;
 public class AccountController {
     private static final AccountService accountService = new AccountServiceImpl();
 
-    public AccountController() {}
+    public AccountController() {
+    }
 
     public Account getAccountById(Long id) {
         return accountService.getById(id);

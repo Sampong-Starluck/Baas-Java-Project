@@ -11,7 +11,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository repository = new UserRepositoryImpl();
 
-    public UserServiceImpl(){}
+    public UserServiceImpl() {
+    }
 
     @Override
     public User getById(Long id) {
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return  repository.findAll();
+        return repository.findAll();
     }
 
     @Override

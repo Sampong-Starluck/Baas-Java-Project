@@ -20,11 +20,11 @@ public class AccountView {
     private static final AccountController accountController = new AccountController();
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserView userView = new UserView();
-    private Long id;
 
-    public AccountView() {}
+    public AccountView() {
+    }
 
-    public void handleAccount(){
+    public void handleAccount() {
         var running = true;
         System.out.println("\n\n");
         while (running) {
@@ -50,10 +50,10 @@ public class AccountView {
                 case 3 -> {
                     System.out.println("Enter your account id: ");
                     var account = accountController.getAccountById(scanner.nextLong());
-                    if(account == null){
+                    if (account == null) {
                         System.out.println("Account not found");
                     } else {
-                        System.out.println("Account details: "+ toJson(account));
+                        System.out.println("Account details: " + toJson(account));
                     }
                 }
                 case 4 -> {
@@ -63,10 +63,10 @@ public class AccountView {
                 case 5 -> {
                     System.out.println("Enter your account number: ");
                     var account = accountController.getByAccountNumber(scanner.nextLine());
-                    if(account == null){
+                    if (account == null) {
                         System.out.println("Account not found");
-                    } else  {
-                        System.out.println("Account details: "+ toJson(account));
+                    } else {
+                        System.out.println("Account details: " + toJson(account));
                     }
                 }
                 case 6 -> {
@@ -79,7 +79,7 @@ public class AccountView {
 
     }
 
-    private Account addAccount(){
+    private Account addAccount() {
         var userList = userService.getAll();
         System.out.println(userService.tableList(userList));
         System.out.println("\nSelect user id for account creation: ");
@@ -94,7 +94,7 @@ public class AccountView {
         }
         System.out.println("\nDo you want to add any balance to this account(y/N): ");
         var confirmation = scanner.nextLine();
-        if(confirmation.equals("Y") || confirmation.equals("y")){
+        if (confirmation.equals("Y") || confirmation.equals("y")) {
             System.out.println("Enter the balance amount that you want to add: ");
             balance = scanner.nextDouble();
         }
@@ -107,7 +107,7 @@ public class AccountView {
         return accountController.addNewAccount(account);
     }
 
-    public String toJson(Account account){
+    public String toJson(Account account) {
         var mapper = new ObjectMapper();
         try {
             var accountResponse = toResponse(account);
@@ -117,9 +117,9 @@ public class AccountView {
         }
     }
 
-    public AccountResponse toResponse(Account account){
+    public AccountResponse toResponse(Account account) {
         var user = userView.toResponse(account.user());
-        return new AccountResponse(account.id(), account.accountNumber(), account.accountName(), account.balance(), account.currency(), user);
+        return new AccountResponse(account.id(), account.accountNumber(), account.accountName(), account.balance().doubleValue(), account.currency(), user);
     }
 
     private String accountMenu() {

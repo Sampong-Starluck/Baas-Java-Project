@@ -7,11 +7,15 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.sampong.models.Account;
+import org.sampong.models.TransactionRecord;
 import org.sampong.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
 public class DatabaseConfig {
+    private static final Logger logger = LoggerFactory.getLogger(String.valueOf(DatabaseConfig.class));
     private static final HikariDataSource dataSource;
     private static final SessionFactory sessionFactory;
 
@@ -35,6 +39,7 @@ public class DatabaseConfig {
             // Add annotated classes
             configuration.addAnnotatedClass(User.class);
             configuration.addAnnotatedClass(Account.class);
+            configuration.addAnnotatedClass(TransactionRecord.class);
 
             // Build ServiceRegistry
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
@@ -45,10 +50,11 @@ public class DatabaseConfig {
             // Build SessionFactory
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
-            System.out.println("Hibernate SessionFactory created successfully with HikariCP");
+//            System.out.println("Hibernate SessionFactory created successfully with HikariCP");
+            logger.info("Start ====>> Hibernate SessionFactory created successfully with HikariCP");
 
         } catch (Exception e) {
-            System.err.println("Failed to create SessionFactory: " + e.getMessage());
+            logger.error("Failed to create SessionFactory: {}", e.getMessage());
 //            e.printStackTrace();
             throw new ExceptionInInitializerError(e);
         }
@@ -86,8 +92,11 @@ public class DatabaseConfig {
         properties.setProperty("hibernate.generate_statistics", "true");
 
         // Connection handling
-        properties.setProperty("hibernate.connection.autocommit", "true");
+//        properties.setProperty("hibernate.connection.autocommit", "false");
         properties.setProperty("hibernate.current_session_context_class", "thread");
+
+        // Configure hibernate byte code provider
+        properties.setProperty("hibernate.bytecode.provider", "bytebuddy");
 
         return properties;
     }
@@ -116,12 +125,12 @@ public class DatabaseConfig {
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.addDataSourceProperty("useServerPrepStmts", "true");
         config.addDataSourceProperty("rewriteBatchedStatements", "true");
-        config.addDataSourceProperty("ApplicationName", "HibernateHikariCPDemo");
+        config.addDataSourceProperty("ApplicationName", "HibernateHikariCPBaasProject");
 
         config.setPoolName("HikariCP-PostgreSQL");
 
         HikariDataSource ds = new HikariDataSource(config);
-        System.out.println("HikariCP DataSource created successfully");
+        logger.info("Start ====>> HikariCP DataSource created successfully");
         return ds;
     }
 
@@ -151,6 +160,6 @@ public class DatabaseConfig {
         if (dataSource != null) {
             dataSource.close();
         }
-        System.out.println("Session factory and HikariCP DataSource closed");
+        logger.info(" ====>> Session factory and HikariCP DataSource closed");
     }
 }

@@ -12,7 +12,8 @@ import java.util.Optional;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    public UserRepositoryImpl(){}
+    public UserRepositoryImpl() {
+    }
 
     @Override
     public User save(User user) {
@@ -22,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.persist(user);
             transaction.commit();
             return user;
-        }  catch (Exception e) {
+        } catch (Exception e) {
             if (transaction != null && transaction.getStatus().canRollback()) {
                 try {
                     transaction.rollback();
@@ -41,10 +42,10 @@ public class UserRepositoryImpl implements UserRepository {
             var query = "select u from User u where u.id = :id and status = true";
             User user = session.createQuery(query, User.class).setParameter("id", id).getSingleResult();
             return Optional.ofNullable(user);
-        }catch (NoResultException e) {
+        } catch (NoResultException e) {
             // No user found, return empty
             return Optional.empty();
-        } catch( Exception e ) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to query user", e);
         }
@@ -56,10 +57,10 @@ public class UserRepositoryImpl implements UserRepository {
             var query = "select u from User u where u.username = :id and status = true";
             User user = session.createQuery(query, User.class).setParameter("id", username).getSingleResult();
             return Optional.ofNullable(user);
-        }catch (NoResultException e) {
+        } catch (NoResultException e) {
             // No user found, return empty
             return Optional.empty();
-        } catch( Exception e ) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to query user", e);
         }
@@ -73,7 +74,7 @@ public class UserRepositoryImpl implements UserRepository {
             session.merge(user);
             transaction.commit();
             return user;
-        }  catch( Exception e ) {
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
@@ -88,7 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
             var users = "select u from User u where u.status = true";
             List<User> usersList = session.createQuery(users, User.class).getResultList();
             return Optional.ofNullable(usersList).orElse(List.of());
-        }catch( Exception e ) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             throw new RuntimeException("Failed to query all users");
         }

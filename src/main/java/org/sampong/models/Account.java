@@ -13,8 +13,11 @@ public class Account extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "account_number")
     private String accountNumber;
+    @Column(name = "account_name")
     private String accountName;
+    @Column(name = "balance")
     private Double balance;
     private String currency;
 
@@ -114,5 +117,28 @@ public class Account extends BaseEntity {
                 ", currency='" + currency + '\'' +
                 ", user=" + user +
                 '}';
+    }
+
+    // Business methods
+    public Boolean deposit(Double amount) {
+        if (amount <= 0.0) {
+            System.out.println("Deposit amount must be positive");
+            return false;
+        }
+        balance += amount;
+        return true;
+    }
+
+    public Boolean withdraw(Double amount) {
+        if (amount <= 0.0) {
+            System.out.println("Withdrawal amount must be positive");
+            return false;
+        }
+        if (this.balance.compareTo(amount) < 0) {
+            System.out.println("Insufficient funds");
+            return false;
+        }
+        balance -= amount;
+        return true;
     }
 }
